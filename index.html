@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>90-Day Daily Habit Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .section {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 8px 0;
+    }
+    button {
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .date {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📅 Daily Checklist Tracker</h1>
+<p class="date" id="today"></p>
+
+<div id="checklist"></div>
+
+<button onclick="saveDay()">Save Today</button>
+
+<script>
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('today').innerText = "Date: " + today;
+
+  const habits = {
+    morning: [
+      "Wake up on time",
+      "Drink water",
+      "Stretch / Mobility",
+      "No phone for 1 hour",
+      "Plan top 3 tasks"
+    ],
+    health: [
+      "Workout / Walk",
+      "Protein-rich meals",
+      "7k+ steps",
+      "No junk food",
+      "Grooming done"
+    ],
+    skills: [
+      "Tech Skill 1 practice",
+      "Tech Skill 2 practice",
+      "Project work",
+      "10 new words",
+      "5 idioms"
+    ],
+    discipline: [
+      "Limited phone usage",
+      "Read 10 pages",
+      "Mindful eating",
+      "Sleep 8 hours"
+    ]
+  };
+
+  const checklistDiv = document.getElementById('checklist');
+
+  function renderChecklist() {
+    for (const section in habits) {
+      const div = document.createElement('div');
+      div.className = 'section';
+
+      const title = document.createElement('h2');
+      title.innerText = section.toUpperCase();
+      div.appendChild(title);
+
+      habits[section].forEach((item, index) => {
+        const id = `${section}-${index}`;
+        div.innerHTML += `
+          <label>
+            <input type="checkbox" id="${id}"> ${item}
+          </label>
+        `;
+      });
+
+      checklistDiv.appendChild(div);
+    }
+  }
+
+  function saveDay() {
+    const data = { date: today, habits: {} };
+
+    for (const section in habits) {
+      data.habits[section] = habits[section].map((_, index) => {
+        const id = `${section}-${index}`;
+        return document.getElementById(id).checked;
+      });
+    }
+
+    localStorage.setItem(today, JSON.stringify(data));
+    alert('Today saved successfully ✅');
+  }
+
+  renderChecklist();
+</script>
+
+</body>
+</html>
